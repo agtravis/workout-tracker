@@ -1,3 +1,11 @@
 `use strict`;
 
-module.exports = {};
+const Resistance = require(`./Resistance`);
+const Cardio = require(`./Cardio`);
+const Workout = require(`./Workout`);
+
+module.exports = {
+  Resistance,
+  Cardio,
+  Workout
+};

@@ -18,6 +18,13 @@ app.use(logger(`dev`));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+mongoose.connect(process.env.MONGODB_URI || `mongodb://localhost/workoutdb`, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false
+});
+
 apiRoutes(app);
 htmlRoutes(app);
 
