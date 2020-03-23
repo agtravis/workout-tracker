@@ -30,6 +30,7 @@ function generatePalette() {
 }
 
 function populateChart(data) {
+  console.log(data);
   const totalDurations = getTotalDurations(data);
   const averageWeights = calculateAverageWeight(data);
   const colors = generatePalette();
@@ -42,18 +43,7 @@ function populateChart(data) {
   const lineChart = new Chart(line, {
     type: `line`,
     data: {
-      labels: [
-        `1`,
-        `2`,
-        `3`,
-        `4`,
-        `5`,
-        `6`,
-        `7`,
-        `8`,
-        `9`,
-        `10`
-      ],
+      labels: [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`],
       datasets: [
         {
           label: `Last 10 Workout Durations`,
@@ -94,18 +84,7 @@ function populateChart(data) {
   const barChart = new Chart(bar, {
     type: `bar`,
     data: {
-      labels: [
-        `1`,
-        `2`,
-        `3`,
-        `4`,
-        `5`,
-        `6`,
-        `7`,
-        `8`,
-        `9`,
-        `10`
-      ],
+      labels: [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`],
       datasets: [
         {
           label: `Average Weight From Last 10 Workouts`,

@@ -4,10 +4,74 @@ const mongoose = require(`mongoose`);
 const db = require(`../models`);
 
 module.exports = app => {
+  // app.get(`/api/workouts`, (req, res) => {
+  //   db.Workout.find({})
+  //     .then(dbWorkout => {
+  //       res.json(dbWorkout);
+  //     })
+  //     .catch(err => {
+  //       res.json(err);
+  //     });
+  // });
+
   app.get(`/api/workouts`, (req, res) => {
     db.Workout.find({})
-      .then(dbWorkout => {
-        res.json(dbWorkout);
+      .populate(`cardio`)
+      .populate(`resistance`)
+      .then(result => {
+        console.log(result);
+        const workoutArray = [];
+        for (let i = 0; i < result.length; ++i) {
+          const day = {};
+          day._id = result[i]._id;
+          day.day = result[i].day;
+          day.exercises = [];
+          day.totalDuration = 0;
+          result[i].resistance.forEach(exercise => {
+            day.exercises.push(exercise);
+            day.totalDuration += exercise.duration;
+          });
+          result[i].cardio.forEach(exercise => {
+            day.exercises.push(exercise);
+            day.totalDuration += exercise.duration;
+          });
+          day.__v = result[i].__v;
+          workoutArray.push(day);
+        }
+        console.log(workoutArray);
+        res.json(workoutArray);
+      })
+      .catch(err => {
+        res.json(err);
+      });
+  });
+
+  app.get(`/api/workouts/range`, (req, res) => {
+    db.Workout.find({})
+      .populate(`cardio`)
+      .populate(`resistance`)
+      .then(result => {
+        console.log(result);
+        const workoutArray = [];
+        for (let i = 0; i < result.length; ++i) {
+          const day = {};
+          day._id = result[i]._id;
+          day.day = result[i].day;
+          day.exercises = [];
+          day.totalDuration = 0;
+          result[i].resistance.forEach(exercise => {
+            day.exercises.push(exercise);
+            day.totalDuration += exercise.duration;
+          });
+          result[i].cardio.forEach(exercise => {
+            day.exercises.push(exercise);
+            day.totalDuration += exercise.duration;
+          });
+          day.__v = result[i].__v;
+          workoutArray.push(day);
+        }
+        console.log(workoutArray);
+        res.json(workoutArray);
       })
       .catch(err => {
         res.json(err);
