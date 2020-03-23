@@ -4,24 +4,13 @@ const mongoose = require(`mongoose`);
 const db = require(`../models`);
 
 module.exports = app => {
-  // app.get(`/api/workouts`, (req, res) => {
-  //   db.Workout.find({})
-  //     .then(dbWorkout => {
-  //       res.json(dbWorkout);
-  //     })
-  //     .catch(err => {
-  //       res.json(err);
-  //     });
-  // });
-
   app.get(`/api/workouts`, (req, res) => {
     db.Workout.find({})
       .populate(`cardio`)
       .populate(`resistance`)
       .then(result => {
-        console.log(result);
         const workoutArray = [];
-        for (let i = 0; i < result.length; ++i) {
+        for (let i = result.length - 1; i < result.length; ++i) {
           const day = {};
           day._id = result[i]._id;
           day.day = result[i].day;
@@ -38,7 +27,6 @@ module.exports = app => {
           day.__v = result[i].__v;
           workoutArray.push(day);
         }
-        console.log(workoutArray);
         res.json(workoutArray);
       })
       .catch(err => {
@@ -51,9 +39,13 @@ module.exports = app => {
       .populate(`cardio`)
       .populate(`resistance`)
       .then(result => {
-        console.log(result);
+        let condition = 10;
+        if (result.length < 10) {
+          condition = result.length;
+        }
+        result.sort((a, b) => b.day - a.day);
         const workoutArray = [];
-        for (let i = 0; i < result.length; ++i) {
+        for (let i = 0; i < condition; ++i) {
           const day = {};
           day._id = result[i]._id;
           day.day = result[i].day;
@@ -70,7 +62,6 @@ module.exports = app => {
           day.__v = result[i].__v;
           workoutArray.push(day);
         }
-        console.log(workoutArray);
         res.json(workoutArray);
       })
       .catch(err => {
@@ -79,11 +70,8 @@ module.exports = app => {
   });
 
   app.post(`/api/workouts`, (req, res) => {
-    console.log(req.body);
     db.Workout.create(req.body)
       .then(dbWorkout => {
-        console.log(`-----dbWorkout------`);
-        console.log(dbWorkout);
         res.json(dbWorkout);
       })
       .catch(err => {
@@ -104,9 +92,7 @@ module.exports = app => {
   });
 
   app.put(`/api/workouts/:id`, (req, res) => {
-    console.log(req.body.type);
     if (req.body.type === 'cardio') {
-      console.log(req.body);
       db.Cardio.create(req.body)
         .then(({ _id }) =>
           db.Workout.findOneAndUpdate(
@@ -124,7 +110,6 @@ module.exports = app => {
           res.json(err);
         });
     } else if (req.body.type === `resistance`) {
-      console.log(req.body);
       db.Resistance.create(req.body)
         .then(({ _id }) =>
           db.Workout.findOneAndUpdate(
@@ -142,22 +127,5 @@ module.exports = app => {
           res.json(err);
         });
     }
-    // db.Workout.updateOne(
-    //   { _id: req.params.id },
-    //   {
-    //     $set: {
-    //       workouts: []
-    //     },
-    //     $push: {
-    //       workouts: req.body
-    //     }
-    //   }
-    // )
-    //   .then(dbWorkout => {
-    //     res.json(dbWorkout);
-    //   })
-    //   .catch(err => {
-    //     res.json(err);
-    //   });
   });
 };

@@ -30,7 +30,6 @@ function generatePalette() {
 }
 
 function populateChart(data) {
-  console.log(data);
   const totalDurations = getTotalDurations(data);
   const averageWeights = calculateAverageWeight(data);
   const colors = generatePalette();
